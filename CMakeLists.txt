@@ -15,4 +15,6 @@ add_executable(PixBrush main.cpp
         gui/components.h
         input/keyboard_input.cpp
         input/keyboard_input.h
-        chunk/chunk_fill.cpp)
+        chunk/chunk_fill.cpp
+        input/brushes.cpp
+        logger/logger.h)

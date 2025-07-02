@@ -41,7 +41,7 @@ Vector3 RenderCreateMenu() {
         StripNonDigitFromEnd(heightStr);
         StripNonDigitFromEnd(depthStr);
         ImGui::SetCursorPosX((ImGui::GetWindowWidth()-100.f)*0.5f);
-        if (ImGui::Button("Create", ImVec2(100, 60))) {
+        if (ImGui::Button("Create", ImVec2(100, 60)) || IsKeyPressed(KEY_ENTER)) {
             width = atoi(widthStr);
             height = atoi(heightStr);
             depth = atoi(depthStr);

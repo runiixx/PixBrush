@@ -21,6 +21,9 @@ void update_cube_cursor(chunk_t *chunk,Vector3_t *chunkSize, Vector3 *cube_curso
     Vector3 right = Vector3Normalize(Vector3CrossProduct(forward, camera->up));
     int strafeX = (int)roundf(right.x);
     int strafeZ = (int)roundf(right.z);
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_O)) {
+        camera->position = *cube_cursor;
+    }
     if (IsKeyPressed(KEY_F)) {
 
         if ((int)cube_cursor->x >=0 && (int)cube_cursor->x < chunkSize->x &&

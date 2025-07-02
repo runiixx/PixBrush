@@ -14,12 +14,12 @@ void RenderMainWindow(Vector3 chunkSize) {
     SetConfigFlags(FLAG_VSYNC_HINT);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetConfigFlags(FLAG_MSAA_4X_HINT);
-
+    SetConfigFlags(FLAG_WINDOW_MAXIMIZED);
     SetWindowState(FLAG_WINDOW_ALWAYS_RUN);
 
-    constexpr int screenWidth = 1000;
-    constexpr int screenHeight = 1000;
-
+    const int screenWidth = GetMonitorWidth(0);
+    const int screenHeight = GetMonitorHeight(0);
+    spdlog::info("Width: {} Height: {}", screenWidth, screenHeight);
     InitWindow(screenWidth, screenHeight, "PixBrush");
 
     Camera3D camera = InitCamera();
@@ -31,8 +31,18 @@ void RenderMainWindow(Vector3 chunkSize) {
 
     Vector3 cubeCursor = {chunkSize.x/2, 1.0f, chunkSize.y/2};
     bool isThirdMode = true;
+    bool isRectangleBrushFirstPoint = false;
+    Vector3 rectangleBrushFirstPoint = {-1.0f, -1.0f, -1.0f};
+
+    bool isSphereBrushFirstPoint = false;
+    Vector3 sphereBrushFirstPoint = {-1.0f, -1.0f, -1.0f};
     while (!WindowShouldClose()) {
-        BeginDrawing();
+        /*if (GetFPS() < 60) {
+            spdlog::warn("FPS: {}", GetFPS());
+        }
+        else
+            spdlog::info("FPS: {}", GetFPS());
+        */BeginDrawing();
         ClearBackground(RAYWHITE);
 
         BeginMode3D(camera);
@@ -40,15 +50,19 @@ void RenderMainWindow(Vector3 chunkSize) {
         if (isThirdMode) {
             UpdateCamera(&camera, CAMERA_FREE);
             DisableCursor();
-            spdlog::info("{} {} {}",camera.target.x, camera.target.y, camera.target.z);
+            //spdlog::info("{} {} {}",camera.target.x, camera.target.y, camera.target.z);
 
         }
         else {
             EnableCursor();
+            firstPointRectangle(chunk,cubeCursor,rectangleBrushFirstPoint, isRectangleBrushFirstPoint);
+            firstPointSphere(chunk,chunkSize, cubeCursor, sphereBrushFirstPoint, isSphereBrushFirstPoint);
             update_cube_cursor(&chunk, &chunkSize_t, &cubeCursor, &camera);
         }
         render_chunk(chunk, chunkSize_t, camera);
         DrawCubeWires(cubeCursor, 1.0f, 1.0f, 1.0f, MAROON);
+        //spdlog::info("Cubecursor: {} {} {}", cubeCursor.x, cubeCursor.y, cubeCursor.z);
+        spdlog::info("FirstPoint: {} {} {}", sphereBrushFirstPoint.x, sphereBrushFirstPoint.y, sphereBrushFirstPoint.z);
         EndMode3D();
         EndDrawing();
 
