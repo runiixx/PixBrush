@@ -6,4 +6,6 @@ void RenderTextBox(const char* label, char* input, const float itemWidth, const 
     ImGui::SetNextItemWidth(itemWidth);
     ImGui::SetCursorPosX((ImGui::GetWindowWidth() - offset)*0.5f);
     ImGui::InputText(label, input,sizeof(input));
+
 }
+

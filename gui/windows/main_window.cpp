@@ -2,7 +2,6 @@
 // Created by vik on 6/30/25.
 //
 #include "../windows.h"
-#include <spdlog/spdlog.h>
 
 #include "../../input/keyboard_input.h"
 
@@ -19,7 +18,7 @@ void RenderMainWindow(Vector3 chunkSize) {
 
     const int screenWidth = GetMonitorWidth(0);
     const int screenHeight = GetMonitorHeight(0);
-    spdlog::info("Width: {} Height: {}", screenWidth, screenHeight);
+    //spdlog::info("Width: {} Height: {}", screenWidth, screenHeight);
     InitWindow(screenWidth, screenHeight, "PixBrush");
 
     Camera3D camera = InitCamera();
@@ -62,7 +61,7 @@ void RenderMainWindow(Vector3 chunkSize) {
         render_chunk(chunk, chunkSize_t, camera);
         DrawCubeWires(cubeCursor, 1.0f, 1.0f, 1.0f, MAROON);
         //spdlog::info("Cubecursor: {} {} {}", cubeCursor.x, cubeCursor.y, cubeCursor.z);
-        spdlog::info("FirstPoint: {} {} {}", sphereBrushFirstPoint.x, sphereBrushFirstPoint.y, sphereBrushFirstPoint.z);
+        //spdlog::info("FirstPoint: {} {} {}", sphereBrushFirstPoint.x, sphereBrushFirstPoint.y, sphereBrushFirstPoint.z);
         EndMode3D();
         EndDrawing();
 

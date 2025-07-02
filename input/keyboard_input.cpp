@@ -12,6 +12,7 @@ void ClampCubeCursor(Vector3 *cursor, Vector3_t chunkSize)
     if (cursor->y >= (float)chunkSize.y) cursor->y = (float)chunkSize.y - 1;
     if (cursor->z >= (float)chunkSize.z) cursor->z = (float)chunkSize.z - 1;
 }
+//TODO: rewerite this abomination to be more optimise and more readable
 void update_cube_cursor(chunk_t *chunk,Vector3_t *chunkSize, Vector3 *cube_cursor, Camera3D *camera) {
     Vector3 rawForward = Vector3Subtract(camera->target, camera->position);
     rawForward.y = 0;  // Zero out Y component to prevent vertical movement

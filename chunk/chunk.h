@@ -5,14 +5,15 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 #define CHUNK_H
-#define BLOCK_AIR       0
-#define BLOCK_GRASS     1
-#define BLOCK_WOOD      2
-#define BLOCK_STONE      3
-#define BLOCK_CANVAS    4
 #include <raylib.h>
-#include <raylib/raymath.h>
+
+
+//BLOCK.CPP
+typedef struct {
+    float color[3];
+} Block;
 typedef char*** chunk_t;
+typedef Block*** chunk_new;
 typedef struct {
     int x,y,z;
 } Vector3_t;

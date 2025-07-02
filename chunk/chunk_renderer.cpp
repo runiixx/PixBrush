@@ -11,6 +11,7 @@ Camera3D InitCamera() {
     camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
     return camera;
 }
+//TODO: rewrite this function for the new block struct
 void render_chunk(const chunk_t chunk, const Vector3_t size, Camera camera) {
     constexpr float maxRenderDistance = 30.0f;
     Vector3 camPos = camera.position;

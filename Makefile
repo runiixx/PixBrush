@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -Wall -g -O2 -Igui -Ichunk -Iinput
-SRCS = $(wildcard main.cpp gui/windows/*.cpp gui/components/*.cpp chunk/*.cpp input/*.cpp)
+CXXFLAGS = -Wall -g -O2 -Ilogger -Igui -Ichunk -Iinput
+SRCS = $(wildcard  logger/*.cpp main.cpp gui/windows/*.cpp gui/components/*.cpp chunk/*.cpp input/*.cpp )
 OBJS = $(patsubst %.cpp, build/%.o, $(SRCS))
 
 TARGET = build/PixBrush
@@ -8,7 +8,7 @@ TARGET = build/PixBrush
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) -lraylib -lrimgui -lspdlog
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) -lraylib -lrimgui
 
 
 build/%.o: %.cpp

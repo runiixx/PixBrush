@@ -21,6 +21,8 @@ Vector3 RenderCreateMenu() {
 
     bool done = false;
     int width = 0,height = 0,depth = 0;
+
+    static float color[3] = {0.3f, 0.5f, 0.7f};
     while (!done && !WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(DARKGRAY);
@@ -49,6 +51,7 @@ Vector3 RenderCreateMenu() {
             printf("Width: %d, Height: %d, Depth: %d\n", width, height, depth);
             done = true;
         }
+
 
         ImGui::End();
         rlImGuiEnd();
