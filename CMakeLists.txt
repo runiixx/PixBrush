@@ -19,4 +19,5 @@ add_executable(PixBrush main.cpp
         input/brushes.cpp
         logger/logger.h
         chunk/block.cpp
+        testing.cpp
 )

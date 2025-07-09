@@ -2,12 +2,13 @@
 // Created by vik on 6/30/25.
 //
 #include "../windows.h"
-
 #include "../../input/keyboard_input.h"
-
+//TODO add panel with shortcuts
+//TODO add save to file
 void RenderMainWindow(Vector3 chunkSize) {
     Vector3_t chunkSize_t = floatToIntVec3(chunkSize);
-    chunk_t chunk = init_chunk(&chunkSize_t);
+    //chunk_t chunk = init_chunk(&chunkSize_t);
+    chunk_new chunk = InitChunk(chunkSize_t);
     //configure the window
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -41,11 +42,8 @@ void RenderMainWindow(Vector3 chunkSize) {
         }
         else
             spdlog::info("FPS: {}", GetFPS());
-        */BeginDrawing();
-        ClearBackground(RAYWHITE);
-
-        BeginMode3D(camera);
-        if (IsKeyPressed(KEY_X)) isThirdMode = !isThirdMode;
+        */
+        /*if (IsKeyPressed(KEY_X)) isThirdMode = !isThirdMode;
         if (isThirdMode) {
             UpdateCamera(&camera, CAMERA_FREE);
             DisableCursor();
@@ -62,6 +60,14 @@ void RenderMainWindow(Vector3 chunkSize) {
         DrawCubeWires(cubeCursor, 1.0f, 1.0f, 1.0f, MAROON);
         //spdlog::info("Cubecursor: {} {} {}", cubeCursor.x, cubeCursor.y, cubeCursor.z);
         //spdlog::info("FirstPoint: {} {} {}", sphereBrushFirstPoint.x, sphereBrushFirstPoint.y, sphereBrushFirstPoint.z);
+*/
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        BeginMode3D(camera);
+        UpdateCamera(&camera, CAMERA_FREE);
+        RenderChunk(chunk,camera);
+        DrawCube((Vector3){-1.0f, -1.0f, -1.0f}, 30.0f, 30.0f, 30.0f, MAROON);
+
         EndMode3D();
         EndDrawing();
 

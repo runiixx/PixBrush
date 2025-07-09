@@ -6,6 +6,7 @@
 int main() {
     logger::info("TEST %d %s", 3, "DAA");
     Vector3 chunkSize = RenderCreateMenu();
-    RenderMainWindow(chunkSize);
+    if (chunkSize.x + chunkSize.y + chunkSize.z > 0)
+        RenderMainWindow(chunkSize);
     return 0;
 }

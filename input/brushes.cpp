@@ -60,6 +60,61 @@ void RenderSphereBrush(Vector3 chunkSize,Vector3 center, Vector3 cubeCursor) {
         }
     }
 }
+void RenderLineBrush(Vector3 firstPoint, Vector3 cubeCursor) {
+    int ix = int(floor(firstPoint.x));
+    int iy = int(floor(firstPoint.y));
+    int iz = int(floor(firstPoint.z));
+
+    int tx = int(floor(cubeCursor.x));
+    int ty = int(floor(cubeCursor.y));
+    int tz = int(floor(cubeCursor.z));
+
+    float dx = cubeCursor.x - firstPoint.x;
+    float dy = cubeCursor.y - firstPoint.y;
+    float dz = cubeCursor.z - firstPoint.z;
+
+    float stepX = (dx > 0) ? 1 : -1;
+    float stepY = (dy > 0) ? 1 : -1;
+    float stepZ = (dz > 0) ? 1 : -1;
+
+    float tMaxX = (stepX > 0 ? (floor(firstPoint.x)+1 - firstPoint.x) : (firstPoint.x - floor(firstPoint.x))) / std::abs(dx);
+    float tMaxY = (stepY > 0 ? (floor(firstPoint.y)+1 - firstPoint.y) : (firstPoint.y - floor(firstPoint.y))) / std::abs(dy);
+    float tMaxZ = (stepZ> 0 ? (floor(firstPoint.z)+1 - firstPoint.z) : (firstPoint.z - floor(firstPoint.z))) / std::abs(dz);
+    float tDeltaX = 1.0 / std::abs(dx);
+    float tDeltaY = 1.0 / std::abs(dy);
+    float tDeltaZ = 1.0 / std::abs(dz);
+
+    if (dx == 0) { tMaxX = INFINITY; tDeltaX = INFINITY; }
+    if (dy == 0) { tMaxY = INFINITY; tDeltaY = INFINITY; }
+    if (dz == 0) { tMaxZ = INFINITY; tDeltaZ = INFINITY; }
+
+    while (true) {
+        Vector3 v = {static_cast<float>(ix),static_cast<float>(iy),static_cast<float>(iz)};
+        DrawCube(v,1.0f, 1.0f, 1.0f, Fade(MAROON, 0.3f));
+        if (ix == tx && iy == ty && iz == tz) break;
+
+        if (tMaxX < tMaxY) {
+            if (tMaxX < tMaxZ) {
+                ix += stepX;
+                tMaxX += tDeltaX;
+            } else {
+                iz += stepZ;
+                tMaxZ += tDeltaZ;
+            }
+        } else {
+            if (tMaxY < tMaxZ) {
+                iy += stepY;
+                tMaxY += tDeltaY;
+            } else {
+                iz += stepZ;
+                tMaxZ += tDeltaZ;
+            }
+        }
+    }
+
+
+}
+
 //TODO: rewrite this function for the new block struct
 void firstPointSphere(chunk_t chunk,Vector3 chunkSize, Vector3 cubeCursor, Vector3 &firstPoint, bool &isSphereBrushFirstPoint) {
     if (IsKeyDown(KEY_LEFT_ALT) && IsKeyPressed(KEY_S)) {
@@ -67,7 +122,8 @@ void firstPointSphere(chunk_t chunk,Vector3 chunkSize, Vector3 cubeCursor, Vecto
         isSphereBrushFirstPoint = true;
     }
     if (firstPoint.x != -1.0f && firstPoint.z != -1.0f && firstPoint.y != -1.0f) {
-        RenderSphereBrush(chunkSize,firstPoint, cubeCursor);
+        //RenderSphereBrush(chunkSize,firstPoint, cubeCursor);
+        RenderRectangleBrush(firstPoint, cubeCursor);
     }
     if (IsKeyPressed(KEY_F)) {
         if (isSphereBrushFirstPoint) {

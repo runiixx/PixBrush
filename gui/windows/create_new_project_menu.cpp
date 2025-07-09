@@ -4,11 +4,14 @@
 
 #include "../windows.h"
 #include "../components.h"
+
 void StripNonDigitFromEnd(char *input) {
     size_t len = strlen(input);
-    while (len > 0 && (input[len-1] < '0' || input[len-1] > '9')) {
-        input[len-1] = 0;
-        len--;
+
+    for (int i = 0;i< len;i++) {
+        if (input[i] < '0' || input[i] > '9') {
+            strcpy(input, input+1);
+        }
     }
 }
 Vector3 RenderCreateMenu() {
@@ -21,7 +24,7 @@ Vector3 RenderCreateMenu() {
 
     bool done = false;
     int width = 0,height = 0,depth = 0;
-
+    bool isError = false;
     static float color[3] = {0.3f, 0.5f, 0.7f};
     while (!done && !WindowShouldClose()) {
         BeginDrawing();
@@ -48,10 +51,27 @@ Vector3 RenderCreateMenu() {
             height = atoi(heightStr);
             depth = atoi(depthStr);
 
-            printf("Width: %d, Height: %d, Depth: %d\n", width, height, depth);
-            done = true;
-        }
 
+            if (width == 0 || height == 0  ||depth == 0) {
+                isError = true;
+
+            }
+            else {
+                std::printf("Width: %d, Height: %d, Depth: %d\n", width, height, depth);
+                done = true;
+            }
+
+        }
+        if (isError) {
+            ImGui::SetNextWindowSize(ImVec2(800,600), ImGuiCond_Once);
+            ImGui::SetNextWindowPos(ImVec2(0,0), ImGuiCond_Once);
+            ImGui::Begin("Error", nullptr, ImGuiWindowFlags_NoTitleBar);
+            ImGui::Text("Please enter width, height, and depth for the canva");
+            if (ImGui::Button("Ok", ImVec2(100, 60)) ) {
+                isError = false;
+            }
+            ImGui::End();
+        }
 
         ImGui::End();
         rlImGuiEnd();

@@ -11,11 +11,36 @@ Camera3D InitCamera() {
     camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
     return camera;
 }
-//TODO: rewrite this function for the new block struct
+
+#include "raymath.h" // For math utilities
+
+void RenderChunk(const chunk_new &chunk,Camera camera) {
+    constexpr float maxRenderDistance = 30.0f;
+    Vector3 camPos = camera.position;
+    for (int x = 0; x < chunk.size.x; x++) {
+        for (int y = 0; y < chunk.size.y; y++) {
+            for (int z = 0; z < chunk.size.z; z++) {
+                Vector3 pos = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)};
+                float dist = Vector3Distance(camPos, pos);
+                if (dist > maxRenderDistance) continue;
+
+                Color color;
+                color.r = static_cast<unsigned char>(chunk.chunkData[x][y][z].color[0] * 255);
+                color.g = static_cast<unsigned char>(chunk.chunkData[x][y][z].color[1] * 255);
+                color.b = static_cast<unsigned char>(chunk.chunkData[x][y][z].color[2] * 255);
+                color.a = static_cast<unsigned char>(chunk.chunkData[x][y][z].alpha);
+
+                DrawCube(pos,1.0f, 1.0f, 1.0f,color);
+                if (color.a != 0)
+                    DrawCubeWires(pos, 1.0f, 1.0f, 1.0f, BLACK);
+            }
+        }
+    }
+}
 void render_chunk(const chunk_t chunk, const Vector3_t size, Camera camera) {
     constexpr float maxRenderDistance = 30.0f;
     Vector3 camPos = camera.position;
-
+    //std::lock_guard<std::mutex> lock(renderMutex);
     for (int x = 0; x < size.x; x++) {
         for (int y = 0; y < size.y; y++) {
             for (int z = 0; z < size.z; z++) {
@@ -29,7 +54,7 @@ void render_chunk(const chunk_t chunk, const Vector3_t size, Camera camera) {
 
                 Color color = BLACK;
                 if (block == 2) color = MAROON;
-                else if (block == BLOCK_CANVAS) color = WHITE;
+                else if (block == 10) color = WHITE;
 
                 DrawCube(pos, 1.0f, 1.0f, 1.0f, color);
 
