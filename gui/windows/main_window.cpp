@@ -1,6 +1,8 @@
 //
 // Created by vik on 6/30/25.
 //
+#include <imgui.h>
+
 #include "../windows.h"
 #include "../../input/keyboard_input.h"
 //TODO add panel with shortcuts
@@ -21,8 +23,10 @@ void RenderMainWindow(Vector3 chunkSize) {
     const int screenHeight = GetMonitorHeight(0);
     //spdlog::info("Width: {} Height: {}", screenWidth, screenHeight);
     InitWindow(screenWidth, screenHeight, "PixBrush");
-
+    rlImGuiSetup(false);
     Camera3D camera = InitCamera();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |=ImGuiConfigFlags_NavEnableKeyboard;
     //camera.position = camera_position;
     //camera.target = camera_position;
     //Vector3 cubePosition = {0.0f, 0.0f, 0.0f};
@@ -36,42 +40,59 @@ void RenderMainWindow(Vector3 chunkSize) {
 
     bool isSphereBrushFirstPoint = false;
     Vector3 sphereBrushFirstPoint = {-1.0f, -1.0f, -1.0f};
+
+    float color[3] = {0.0f , 0.0f , 0.0f};
+    bool cameraActive = true;
     while (!WindowShouldClose()) {
-        /*if (GetFPS() < 60) {
-            spdlog::warn("FPS: {}", GetFPS());
+
+        bool blockRaylibInput = io.WantCaptureMouse || io.WantCaptureKeyboard;
+        if (!blockRaylibInput && IsKeyPressed(KEY_TAB)) {
+            cameraActive = !cameraActive;
+            if (cameraActive) DisableCursor();
+            else EnableCursor();
         }
-        else
-            spdlog::info("FPS: {}", GetFPS());
-        */
-        /*if (IsKeyPressed(KEY_X)) isThirdMode = !isThirdMode;
+        if (cameraActive && !blockRaylibInput) UpdateCamera(&camera, CAMERA_FREE);
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        BeginMode3D(camera);
+        RenderChunk(chunk, camera);
+        DrawCubeWires(cubeCursor, 1.0f, 1.0f, 1.0f, MAROON);
+        EndMode3D();
+
+        if (IsKeyPressed(KEY_X)) isThirdMode = !isThirdMode;
+
         if (isThirdMode) {
             UpdateCamera(&camera, CAMERA_FREE);
             DisableCursor();
-            //spdlog::info("{} {} {}",camera.target.x, camera.target.y, camera.target.z);
-
-        }
-        else {
+        } else {
             EnableCursor();
-            firstPointRectangle(chunk,cubeCursor,rectangleBrushFirstPoint, isRectangleBrushFirstPoint);
-            firstPointSphere(chunk,chunkSize, cubeCursor, sphereBrushFirstPoint, isSphereBrushFirstPoint);
-            update_cube_cursor(&chunk, &chunkSize_t, &cubeCursor, &camera);
+            if (!ImGui::GetIO().WantCaptureMouse) {
+                UpdateCubeCursor(chunk, cubeCursor, camera);
+            }
         }
-        render_chunk(chunk, chunkSize_t, camera);
-        DrawCubeWires(cubeCursor, 1.0f, 1.0f, 1.0f, MAROON);
-        //spdlog::info("Cubecursor: {} {} {}", cubeCursor.x, cubeCursor.y, cubeCursor.z);
-        //spdlog::info("FirstPoint: {} {} {}", sphereBrushFirstPoint.x, sphereBrushFirstPoint.y, sphereBrushFirstPoint.z);
-*/
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        BeginMode3D(camera);
-        UpdateCamera(&camera, CAMERA_FREE);
-        RenderChunk(chunk,camera);
-        DrawCube((Vector3){-1.0f, -1.0f, -1.0f}, 30.0f, 30.0f, 30.0f, MAROON);
 
-        EndMode3D();
+        // Always render ImGui (but it will only accept input when in cursor mode)
+        rlImGuiBegin();
+        ImGuiIO& io = ImGui::GetIO();
+        io.MousePos = ImVec2(GetMouseX(), GetMouseY());
+        io.MouseDown[0] = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
+        // Repeat for other inputs...
+
+
+        ImGui::SetNextWindowSize(ImVec2(500, 500), ImGuiCond_Once);
+        if (ImGui::Begin("Color Picker")) {
+            ImGui::ColorPicker3("Color", color);
+            if (ImGui::Button("Test Button")) {
+                logger::info("Button clicked! Color: %f,%f,%f", color[0], color[1], color[2]);
+            }
+            ImGui::End();
+        }
+
+        rlImGuiEnd();
+
         EndDrawing();
-
     }
-
+    rlImGuiShutdown();
     CloseWindow();
 }

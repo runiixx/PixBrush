@@ -13,6 +13,52 @@ void ClampCubeCursor(Vector3 *cursor, Vector3_t chunkSize)
     if (cursor->z >= (float)chunkSize.z) cursor->z = (float)chunkSize.z - 1;
 }
 //TODO: rewerite this abomination to be more optimise and more readable
+
+void UpdateCubeCursor(const chunk_new &chunk, Vector3 &cubeCursor, Camera3D &camera) {
+    Vector3 rawForward = Vector3Subtract(camera.target, camera.position);
+    rawForward.y = 0;
+
+    Vector3 forward = Vector3Normalize(rawForward);
+    int dx = static_cast<int>(roundf(forward.x));
+    int dz = static_cast<int>(roundf(forward.z));
+
+    Vector3 right = Vector3Normalize(Vector3CrossProduct(forward, camera.up));
+    int strafeX = static_cast<int>(roundf(right.x));
+    int strafeZ = static_cast<int>(roundf(right.z));
+
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_O)) camera.position = cubeCursor;
+    if (IsKeyPressed(KEY_F)) {
+        if (cubeCursor.x >=0.0f && cubeCursor.x < static_cast<float>(chunk.size.x) &&
+            cubeCursor.y >= 0.0f && cubeCursor.y < static_cast<float>(chunk.size.y) &&
+            cubeCursor.z >= 0.0f && cubeCursor.z < static_cast<float>(chunk.size.z)) {
+            Vector3_t pos = {static_cast<int>(cubeCursor.x), static_cast<int>(cubeCursor.y), static_cast<int>(cubeCursor.z)};
+            logger::info("placing a block");
+        }
+    }
+    if (IsKeyPressed(KEY_W)) {
+        cubeCursor.x += static_cast<float>(dx);
+        cubeCursor.z += static_cast<float>(dz);
+    }
+    if (IsKeyPressed(KEY_S)) {
+        cubeCursor.x += static_cast<float>(-dx);
+        cubeCursor.z += static_cast<float>(-dz);
+
+    }
+    if (IsKeyPressed(KEY_D)) {
+        cubeCursor.x += static_cast<float>(strafeX);
+        cubeCursor.z += static_cast<float>(strafeZ);
+    }
+    if (IsKeyPressed(KEY_A)) {
+        cubeCursor.x += static_cast<float>(-strafeX);
+        cubeCursor.z += static_cast<float>(-strafeZ);
+    }
+    if (IsKeyPressed(KEY_E) && cubeCursor.y < static_cast<float>(chunk.size.y)) {
+        cubeCursor.y +=1.0f;
+    }
+    if (IsKeyPressed(KEY_Q) && cubeCursor.y > 1.0f) cubeCursor.y -= 1.0f;
+    ClampCubeCursor(&cubeCursor, chunk.size);
+    logger::warning("Cube cursor: %f, %f, %f", cubeCursor.x, cubeCursor.y, cubeCursor.z);
+}
 void update_cube_cursor(chunk_t *chunk,Vector3_t *chunkSize, Vector3 *cube_cursor, Camera3D *camera) {
     Vector3 rawForward = Vector3Subtract(camera->target, camera->position);
     rawForward.y = 0;  // Zero out Y component to prevent vertical movement

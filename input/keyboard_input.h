@@ -11,4 +11,7 @@ void update_cube_cursor(chunk_t *chunk,Vector3_t *chunkSize, Vector3 *cube_curso
 
 void firstPointRectangle(chunk_t chunk,Vector3 cubeCursor,Vector3 &firstPoint, bool &isRectangleBrushFirstPoint);
 void firstPointSphere(chunk_t chunk,Vector3 chunkSize, Vector3 cubeCursor, Vector3 &firstPoint, bool &isSphereBrushFirstPoint);
+
+void UpdateCubeCursor(const chunk_new &chunk, Vector3 &cubeCursor, Camera3D &camera);
+
 #endif //KEYBOARD_INPUT_H

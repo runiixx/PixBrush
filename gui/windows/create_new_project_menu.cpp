@@ -72,10 +72,10 @@ Vector3 RenderCreateMenu() {
             }
             ImGui::End();
         }
+        ImGui::ColorPicker3("Color", color);
 
         ImGui::End();
         rlImGuiEnd();
-
         EndDrawing();
     }
 

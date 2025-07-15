@@ -28,11 +28,14 @@ void RenderChunk(const chunk_new &chunk,Camera camera) {
                 color.r = static_cast<unsigned char>(chunk.chunkData[x][y][z].color[0] * 255);
                 color.g = static_cast<unsigned char>(chunk.chunkData[x][y][z].color[1] * 255);
                 color.b = static_cast<unsigned char>(chunk.chunkData[x][y][z].color[2] * 255);
-                color.a = static_cast<unsigned char>(chunk.chunkData[x][y][z].alpha);
+                color.a = static_cast<unsigned char>(chunk.chunkData[x][y][z].alpha );
+                //logger::info("X:%f Y:%f Z:%f",pos.x, pos.y, pos.z);
+                //DrawCube(pos, 1.0f, 1.0f, 1.0f,MAROON);
 
-                DrawCube(pos,1.0f, 1.0f, 1.0f,color);
-                if (color.a != 0)
+                if (color.a != 0) {
+                    DrawCube(pos,1.0f, 1.0f, 1.0f,color);
                     DrawCubeWires(pos, 1.0f, 1.0f, 1.0f, BLACK);
+                }
             }
         }
     }

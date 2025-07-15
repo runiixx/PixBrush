@@ -29,7 +29,7 @@ void info(const char *format, Args... args) {
         std::time_t t = std::time(nullptr);
         char buff[100];
         std::strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", std::localtime(&t));
-        std::cout << "[" << buff << "] [" << LOGGER_WARNING << "INFO" << RESET << "] ";
+        std::cout << "[" << buff << "] [" << LOGGER_WARNING << "WARN" << RESET << "] ";
         std::printf(format, args...);
         std::cout <<'\n';
     }
@@ -39,7 +39,7 @@ void info(const char *format, Args... args) {
         std::time_t t = std::time(nullptr);
         char buff[100];
         std::strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", std::localtime(&t));
-        std::cout << "[" << buff << "] [" << LOGGER_ERROR << "INFO" << RESET << "] ";
+        std::cout << "[" << buff << "] [" << LOGGER_ERROR << "ERR" << RESET << "] ";
         std::printf(format, args...);
         std::cout <<'\n';
     }
